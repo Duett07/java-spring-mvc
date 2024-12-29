@@ -1,4 +1,4 @@
-package java.vn.du.laptopshop;
+package vn.du.laptopshop;
 
 public class LaptopshopApplication {
 
