@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,8 @@ import vn.du.laptopshop.service.UploadService;
 import vn.du.laptopshop.service.UserService;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +52,39 @@ public class UserController {
         return "admin/user/show";
     }
 
+    @GetMapping("/admin/user/create")
+    public String get(Model model) {
+        model.addAttribute("newUser", new User());
+        return "admin/user/create";
+    }
+
+    @PostMapping(value = "/admin/user/create")
+    public String createUserPage(Model model,
+            @ModelAttribute("newUser") @Valid User du,
+            BindingResult newUserBindingResult,
+            @RequestParam("duFile") MultipartFile file) {
+
+        List<FieldError> errors = newUserBindingResult.getFieldErrors();
+        for (FieldError error : errors) {
+            System.out.println("---->" + error.getField() + " - " + error.getDefaultMessage());
+        }
+
+        // vadidate
+        if (newUserBindingResult.hasErrors()) {
+            return "/admin/user/create";
+        }
+
+        String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
+        String hashPassword = this.passwordEncoder.encode(du.getPassword());
+
+        du.setAvatar(avatar);
+        du.setPassword(hashPassword);
+        du.setRole(this.userService.getRoleByName(du.getRole().getName()));
+        // save
+        this.userService.handleSaveUser(du);
+        return "redirect:/admin/user";
+    }
+
     @RequestMapping("/admin/user/{id}")
     public String getUserDetailPage(Model model, @PathVariable long id) {
         User user = this.userService.getUserById(id);
@@ -61,28 +98,6 @@ public class UserController {
         User currentUser = this.userService.getUserById(id);
         model.addAttribute("newUser", currentUser);
         return "admin/user/update";
-    }
-
-    @GetMapping("/admin/user/create")
-    public String get(Model model) {
-        model.addAttribute("newUser", new User());
-        return "admin/user/create";
-    }
-
-    @PostMapping(value = "/admin/user/create")
-    public String createUserPage(Model model,
-            @ModelAttribute("newUser") User du,
-            @RequestParam("duFile") MultipartFile file) {
-
-        String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
-        String hashPassword = this.passwordEncoder.encode(du.getPassword());
-
-        du.setAvatar(avatar);
-        du.setPassword(hashPassword);
-        du.setRole(this.userService.getRoleByName(du.getRole().getName()));
-        // save
-        this.userService.handleSaveUser(du);
-        return "redirect:/admin/user";
     }
 
     @PostMapping("/admin/user/update")
