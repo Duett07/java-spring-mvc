@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-LaptopshopApplication<laptopshop>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "vn.du.laptopshop.LaptopshopApplication",
+            "projectName": "laptopshop",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=37145 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=laptopshop"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-LaptopshopApplication<java-spring-mvc_70f8c548>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "java.vn.du.laptopshop.LaptopshopApplication",
+            "projectName": "java-spring-mvc_70f8c548",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
