@@ -510,3 +510,20 @@
 }
 
 /*** Footer End ***/
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.page-item {
+    margin: 0 1px;
+    /* Khoảng cách giữa các nút */
+}
+
+.page-item.active .page-link {
+    background-color: #a5e15b !important;
+    /* Màu xanh lá chuẩn của Bootstrap */
+    border-color: #e19e46 !important;
+}

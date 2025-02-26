@@ -44,7 +44,6 @@
                     </div>
                     <!-- Spinner End -->
 
-
                     <jsp:include page="../layout/header.jsp" />
 
 
@@ -65,9 +64,9 @@
                                 <div class="row g-4 fruite">
                                     <div class="col-12 col-md-3">
                                         <div class="row g-4">
-                                            <div class="col-8">
-                                                <label>Bộ lọc tìm kiếm</label>
-                                                <hr>
+                                            <label>Bộ lọc tìm kiếm</label>
+                                            <hr>
+                                            <div class="col-8" id="factoryFilter">
                                                 <div class="mb-2"><b>Hãng sản xuất</b></div>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="checkbox" id="factory-1"
@@ -100,7 +99,7 @@
                                                     <label class="form-check-label" for="factory-6"> Acer</label>
                                                 </div>
                                             </div>
-                                            <div class="col-8">
+                                            <div class="col-8" id="targetFilter">
                                                 <div class="mb-2"><b>Mục đích sử dụng</b></div>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="checkbox" id="target-1"
@@ -135,8 +134,8 @@
                                                     <label class="form-check-label" for="target-6"> Doanh nhân</label>
                                                 </div>
                                             </div>
-                                            <div class="col-8">
-                                                <div class="mb-2"><b>Mục đích sử dụng</b></div>
+                                            <div class="col-8" id="priceFilter">
+                                                <div class="mb-2"><b>Giá cả</b></div>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="checkbox" id="price-1"
                                                         value="duoi-10-trieu">
@@ -175,35 +174,39 @@
                                             <div class="col-8">
                                                 <div class="mb-2"><b>Sắp xếp</b></div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="flexRadioDisabled" id="flexRadioDisabled">
-                                                    <label class="form-check-label" for="flexRadioDisabled">Giá tăng
+                                                    <input class="form-check-input" type="radio" id="sort-1"
+                                                        value="gia-tang-dan" name="radio-sort">
+                                                    <label class="form-check-label" for="sort-1">Giá tăng
                                                         dần</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="flexRadioDisabled" id="flexRadioDisabled">
-                                                    <label class="form-check-label" for="flexRadioDisabled">Giá giảm
+                                                    <input class="form-check-input" type="radio" id="sort-2"
+                                                        value="gia-giam-dan" name="radio-sort">
+                                                    <label class="form-check-label" for="sort-2">Giá giảm
                                                         dần</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="flexRadioDisabled" id="flexRadioDisabled">
-                                                    <label class="form-check-label" for="flexRadioDisabled">Không sắp
+                                                    <input class="form-check-input" type="radio" id="sort-3" checked
+                                                        value="gia-nothing" name="radio-sort">
+                                                    <label class="form-check-label" for="sort-3">Không sắp
                                                         xếp</label>
                                                 </div>
                                             </div>
-                                            <div class="">
-                                                <a href="#"
-                                                    class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-70">
-                                                    Lọc sản phẩm</a>
+                                            <div class="col-12">
+                                                <button
+                                                    class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-70"
+                                                    id="btnFilter">
+                                                    Lọc sản phẩm</button>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-8 text-center">
                                         <div class="row g-4">
+                                            <c:if test="${totalPages == 0}">
+                                                <div>Không tìm thấy sản phẩm</div>
+                                            </c:if>
                                             <c:forEach var="product" items="${products}">
-                                                <div class="col-md-4 col-lg-4 col-xl-4">
+                                                <div class="col-md-5 col-lg-5 col-xl-4">
                                                     <div class="rounded position-relative fruite-item">
                                                         <div class="fruite-img">
                                                             <img src="/images/product/${product.image}"
@@ -241,14 +244,32 @@
                                                     </div>
                                                 </div>
                                             </c:forEach>
-                                            <div class="col-12">
+
+                                            <c:if test="${totalPages > 0}">
                                                 <div class="pagination d-flex justify-content-center mt-5">
-                                                    <a href="#" class="rounded">&laquo;</a>
-                                                    <a href="#" class="active rounded">1</a>
-                                                    <a href="#" class="rounded">2</a>
-                                                    <a href="#" class="rounded">&raquo;</a>
+                                                    <li class="page-item">
+                                                        <a class="${1 eq currentPage ? 'disabled page-link' : 'page-link'}"
+                                                            href="/products?page=${currentPage - 1}${queryString}"
+                                                            aria-label="Previous">
+                                                            <span aria-hidden="true">&laquo;</span>
+                                                        </a>
+                                                    </li>
+                                                    <c:forEach begin="0" end="${totalPages - 1}" varStatus="loop">
+                                                        <li class="page-item">
+                                                            <a class="${(loop.index + 1) eq currentPage ? 'active page-link' : 'page-link'}"
+                                                                href="/products?page=${loop.index + 1}${queryString}">${loop.index
+                                                                + 1}</a>
+                                                        </li>
+                                                    </c:forEach>
+                                                    <li class="page-item">
+                                                        <a class="${totalPages eq currentPage ? 'disabled page-link' : 'page-link'}"
+                                                            href="/products?page=${currentPage + 1}${queryString}"
+                                                            aria-label="Next">
+                                                            <span aria-hidden="true">&raquo;</span>
+                                                        </a>
+                                                    </li>
                                                 </div>
-                                            </div>
+                                            </c:if>
                                         </div>
                                     </div>
                                 </div>
