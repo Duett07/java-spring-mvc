@@ -14,7 +14,6 @@ import vn.du.laptopshop.domain.CartDetail;
 import vn.du.laptopshop.domain.Order;
 import vn.du.laptopshop.domain.OrderDetail;
 import vn.du.laptopshop.domain.Product;
-import vn.du.laptopshop.domain.Product_;
 import vn.du.laptopshop.domain.User;
 import vn.du.laptopshop.domain.dto.ProductCriteriaDTO;
 import vn.du.laptopshop.repository.CartDetailRepository;
@@ -124,7 +123,7 @@ public class ProductService {
             // Set the appropriate min and max based on the price range string
             switch (p) {
                 case "duoi-10-trieu":
-                    min = 0;
+                    min = 1;
                     max = 10000000;
                     break;
                 case "10-15-trieu":

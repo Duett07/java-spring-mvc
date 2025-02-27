@@ -1,7 +1,5 @@
 package vn.du.laptopshop.config;
 
-import org.apache.tomcat.util.net.DispatchType;
-import org.springframework.boot.devtools.remote.server.Dispatcher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -60,7 +58,8 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(
                 authorize -> authorize.dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE)
                         .permitAll()
-                        .requestMatchers("/", "/login", "/product/**", "/register", "/client/**", "/css/**", "/js/**",
+                        .requestMatchers("/", "/login", "/product/**", "/register", "/products/**", "/client/**",
+                                "/css/**", "/js/**",
                                 "/images/**")
                         .permitAll().requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().authenticated())
                 .sessionManagement((sessionManagement) -> sessionManagement

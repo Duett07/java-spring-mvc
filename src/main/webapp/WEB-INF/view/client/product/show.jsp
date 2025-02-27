@@ -293,6 +293,13 @@
 
                     <!-- Template Javascript -->
                     <script src="/client/js/main.js"></script>
+                    <style>
+                        .page-link.disabled {
+                            color: var(--bs-pagination-disabled-color);
+                            pointer-events: none;
+                            background-color: var(--bs-pagination-disabled-bg);
+                        }
+                    </style>
                 </body>
 
 
