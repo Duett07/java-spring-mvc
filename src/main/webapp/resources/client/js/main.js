@@ -268,10 +268,7 @@
         searchParams.set('page', '1');
         searchParams.set('sort', sortValue);
 
-        //reset
-        searchParams.delete('factory');
-        searchParams.delete('target');
-        searchParams.delete('price');
+
 
         if (factoryArr.length > 0) {
             searchParams.set('factory', factoryArr.join(','));
@@ -286,6 +283,7 @@
         //update the URL and reload the page 
         window.location.href = currentUrl.toString();
     });
+
 
     //handle auto checkbox after page loading
     //Parse the URL parameters
@@ -351,14 +349,14 @@
         const productId = $(this).attr('data-product-id');
         const token = $("meta[name='_csrf']").attr("content");
         const header = $("meta[name='_csrf_header']").attr("content");
-        const quantity = $("#cartDetails0\\.quantity").val();
+
         $.ajax({
             url: `${window.location.origin}/api/add-product-to-cart`,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(header, token);
             },
             type: "POST",
-            data: JSON.stringify({ quantity: quantity, productId: productId }),
+            data: JSON.stringify({ quantity: 1, productId: productId }),
             contentType: 'application/json',
 
             success: function (response) {
@@ -395,6 +393,7 @@
         const token = $("meta[name='_csrf']").attr("content");
         const header = $("meta[name='_csrf_header']").attr("content");
         const quantity = $("#cartDetails0\\.quantity").val();
+
         $.ajax({
             url: `${window.location.origin}/api/add-product-to-cart`,
             beforeSend: function (xhr) {

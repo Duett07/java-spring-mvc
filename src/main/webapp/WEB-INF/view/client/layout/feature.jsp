@@ -43,7 +43,7 @@
                         </div>
                         <div class="featurs-content text-center">
                             <h5>Giao hàng tận nơi</h5>
-                            <p class="mb-0">Giao hàng 24/7 tại 63 tỉnh thành</p>
+                            <p class="mb-0">Giao hàng 24/7, khắp 63 tỉnh thành</p>
                         </div>
                     </div>
                 </div>

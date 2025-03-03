@@ -21,6 +21,7 @@ import vn.du.laptopshop.domain.User;
 import vn.du.laptopshop.domain.dto.ProductCriteriaDTO;
 import vn.du.laptopshop.service.ProductService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,11 +45,11 @@ public class ItemController {
     }
 
     @PostMapping("/add-product-to-cart/{id}")
-    public String addProductToCart(@PathVariable long id, HttpServletRequest request) {
+    public String addProductToCart(@PathVariable long id, @RequestBody() CartRequest cartRequest,
+            HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
         long productId = id;
-
         String email = (String) session.getAttribute("email");
 
         this.productService.handleAddProductToCart(email, productId, session, 1);
@@ -167,7 +168,7 @@ public class ItemController {
                 // page = 1
             }
         } catch (Exception e) {
-            // page = 1
+            page = 1;
             // TODO: handle exception
         }
 
@@ -184,20 +185,21 @@ public class ItemController {
             }
         }
 
-        Page<Product> prs = this.productService.fetchProductsWithSpec(pageable, productCriteriaDTO);
+        // Lấy danh sách sản phẩm có phân trang
+        Page<Product> prs = productService.fetchProductsWithSpec(pageable, productCriteriaDTO);
+        List<Product> products = prs.getContent().isEmpty() ? new ArrayList<>() : prs.getContent();
 
-        // convert type page to list
-        List<Product> Products = prs.getContent().size() > 0 ? prs.getContent() : new ArrayList<Product>();
-        String qs = request.getQueryString();
-        if (qs != null && qs.isBlank()) {
-            // remove page
-            qs = qs.replace("page=" + page, "");
+        // Xử lý queryString để giữ lại các tham số lọc khi phân trang
+        String queryString = request.getQueryString();
+        if (queryString != null && !queryString.isBlank()) {
+            queryString = queryString.replaceAll("(&?page=\\d+)", ""); // Xóa page nếu có
         }
 
-        model.addAttribute("products", Products);
+        // Gửi dữ liệu về View
+        model.addAttribute("products", products);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", prs.getTotalPages());
-        model.addAttribute("queryString", qs);
+        model.addAttribute("queryString", queryString != null ? "" + queryString : "");
 
         return "client/product/show";
     }
